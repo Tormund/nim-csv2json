@@ -1,4 +1,4 @@
-# CSV to JSON converter module for Nimrod.
+# CSV to JSON converter module for Nim.
 
 # Written by Adam Chesak.
 # Code released under the MIT open source license.
@@ -12,7 +12,7 @@ import json
 
 
 proc parseCSV(csv : string, filenameOut : string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): seq[seq[string]]
-proc toJSON*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): PJsonNode
+proc toJSON*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): JsonNode
 proc toJSONString*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): string
 
 
@@ -20,8 +20,8 @@ proc parseCSV(csv : string, filenameOut : string, separator : char = ',', quote 
     ## Parses the CSV and returns it as a sequence of sequences.
     
     # Parse the CSV.
-    var stream : PStringStream = newStringStream(csv)
-    var csvParser : TCsvParser
+    var stream : StringStream = newStringStream(csv)
+    var csvParser : CsvParser
     csvParser.open(stream, filenameOut, skipInitialSpace = skipInitialSpace, separator = separator, quote = quote, escape = escape)
     
     # Loop through the lines and add them to the sequence.
@@ -38,18 +38,22 @@ proc parseCSV(csv : string, filenameOut : string, separator : char = ',', quote 
     return csvSeq
 
 
-proc toJSON*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): PJsonNode = 
-    ## Parses the CSV and returns it's JSON representation as a PJsonNode. filenameOut is only used for error messages. See Nimrod's parsecsv docs for information on other parameters.
+proc toJSON*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): JsonNode = 
+    ## Parses the CSV and returns its JSON representation as a ``JsonNode``.
+    ##
+    ## ``filenameOut`` is only used for error messages. See Nim's ``parsecsv`` docs for information on other parameters.
     
     # Parse the CSV then parse the string to JSON.
     var njson : string = toJSONString(csv, filenameOut, separator, quote, escape, skipInitialSpace)
-    var json : PJsonNode = parseJSON(njson)
+    var json : JsonNode = parseJSON(njson)
     
     return json
 
 
 proc toJSONString*(csv : string, filenameOut: string, separator : char = ',', quote : char = '\"', escape : char = '\0', skipInitialSpace : bool = true): string = 
-    ## Parses the CSV and returns it as a string containing the JSON. filenameOut is only used for error messages. See Nimrod's parsecsv docs for information on other parameters.
+    ## Parses the CSV and returns it as a string containing the JSON.
+    ##
+    ## ``filenameOut`` is only used for error messages. See Nim's ``parsecsv`` docs for information on other parameters.
     
     # Parse the CSV.
     var ncsv = parseCSV(csv, filenameOut, separator, quote, escape, skipInitialSpace)
