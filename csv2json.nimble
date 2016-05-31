@@ -1,9 +1,9 @@
 [Package]
 name = "csv2json"
-version = "0.1"
+version = "0.2"
 author = "Adam Chesak"
 description = "Convert CSV files to JSON"
 license = "MIT"
 
 [Deps]
-Requires: "nimrod >= 0.10.2"
+Requires: "nim >= 0.13"
